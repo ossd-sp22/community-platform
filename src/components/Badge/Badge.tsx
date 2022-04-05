@@ -1,5 +1,6 @@
-import { Image, ImageProps } from 'theme-ui'
-import { ProfileTypeLabel } from 'src/models/user_pp.models'
+import type { ImageProps } from 'theme-ui';
+import { Image } from 'theme-ui'
+import type { ProfileTypeLabel } from 'src/models/user_pp.models'
 import Workspace from 'src/pages/User/workspace/Workspace'
 
 import MemberBadge from 'src/assets/images/badges/pt-member.svg'

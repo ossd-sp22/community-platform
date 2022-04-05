@@ -1,9 +1,10 @@
 import styled from '@emotion/styled'
+import type {
+  VerticalAlignProps,
+  SpaceProps} from 'styled-system';
 import {
   verticalAlign,
-  VerticalAlignProps,
-  space,
-  SpaceProps,
+  space
 } from 'styled-system'
 
 import { MdFileDownload } from '@react-icons/all-files/md/MdFileDownload'

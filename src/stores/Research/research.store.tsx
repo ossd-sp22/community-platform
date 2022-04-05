@@ -9,8 +9,8 @@ import {
 import { createContext, useContext } from 'react'
 import type { IConvertedFileMeta } from 'src/types'
 import { logger } from 'src/logger'
-import { IComment, IUser } from 'src/models'
-import { IResearch } from 'src/models/research.models'
+import type { IComment, IUser } from 'src/models'
+import type { IResearch } from 'src/models/research.models'
 import { ModuleStore } from 'src/stores/common/module.store'
 import {
   filterModerableItems,

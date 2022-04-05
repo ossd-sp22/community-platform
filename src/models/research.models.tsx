@@ -1,6 +1,6 @@
 import type { IConvertedFileMeta } from 'src/types'
-import { DBDoc, IComment, IModerable, ISelectedTags } from 'src/models'
-import { IUploadedFileMeta } from 'src/stores/storage'
+import type { DBDoc, IComment, IModerable, ISelectedTags } from 'src/models'
+import type { IUploadedFileMeta } from 'src/stores/storage'
 
 /** All typings related to the Research Module can be found here */
 export namespace IResearch {

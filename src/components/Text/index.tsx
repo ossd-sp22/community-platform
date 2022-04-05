@@ -1,5 +1,6 @@
 import { forwardRef } from 'react'
-import { Text as ThemeUiText, TextProps as ThemeUiTextProps } from 'theme-ui'
+import type { TextProps as ThemeUiTextProps } from 'theme-ui';
+import { Text as ThemeUiText } from 'theme-ui'
 import theme from '../../themes/styled.theme'
 import styled from '@emotion/styled'
 

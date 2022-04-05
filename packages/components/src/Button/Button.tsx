@@ -1,9 +1,10 @@
 import * as React from 'react'
 import { Icon } from '../Icon/Icon'
 import type { IGlyphs } from '../Icon/types'
+import type {
+  ButtonProps as ThemeUiButtonProps} from 'theme-ui';
 import {
-  Button as ThemeUiButton,
-  ButtonProps as ThemeUiButtonProps,
+  Button as ThemeUiButton
 } from 'theme-ui'
 import styled from '@emotion/styled'
 
