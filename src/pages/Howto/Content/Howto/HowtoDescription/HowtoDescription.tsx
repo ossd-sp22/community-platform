@@ -1,18 +1,17 @@
 import { PureComponent } from 'react'
 import TagDisplay from 'src/components/Tags/TagDisplay/TagDisplay'
 import { format } from 'date-fns'
-import { IHowtoDB } from 'src/models/howto.models'
+import type { IHowtoDB } from 'src/models/howto.models'
 import Heading from 'src/components/Heading'
-import Text from 'src/components/Text'
-import ModerationStatusText from 'src/components/ModerationStatusText'
+import ModerationStatusText from 'src/components/ModerationStatusText/ModerationStatustext'
 import { Link } from 'src/components/Links'
-import { Box, Flex, Image } from 'theme-ui'
+import { Text, Box, Flex, Image } from 'theme-ui'
 import { FileInfo } from 'src/components/FileInfo/FileInfo'
 import StepsIcon from 'src/assets/icons/icon-steps.svg'
 import TimeNeeded from 'src/assets/icons/icon-time-needed.svg'
 import DifficultyLevel from 'src/assets/icons/icon-difficulty-level.svg'
 import { Button } from 'oa-components'
-import { IUser } from 'src/models/user.models'
+import type { IUser } from 'src/models/user.models'
 import {
   isAllowToEditContent,
   emStringToPx,
@@ -21,8 +20,8 @@ import {
 import theme from 'src/themes/styled.theme'
 import ArrowIcon from 'src/assets/icons/icon-arrow-select.svg'
 import { FlagIconHowTos } from 'oa-components'
-import { HowtoUsefulStats } from './HowtoUsefulStats'
 import { VerifiedUserBadge } from 'src/components/VerifiedUserBadge/VerifiedUserBadge'
+import { UsefulStatsButton } from 'src/components/UsefulStatsButton/UsefulStatsButton'
 
 interface IProps {
   howto: IHowtoDB
@@ -30,7 +29,7 @@ interface IProps {
   needsModeration: boolean
   votedUsefulCount?: number
   verified?: boolean
-  userVotedUseful: boolean
+  hasUserVotedUseful: boolean
   moderateHowto: (accepted: boolean) => void
   onUsefulClick: () => void
 }
@@ -104,14 +103,16 @@ export default class HowtoDescription extends PureComponent<IProps> {
                 </Flex>
               </Button>
             </Link>
-            <Box style={{ flexGrow: 1 }}>
-              <HowtoUsefulStats
-                votedUsefulCount={this.props.votedUsefulCount || 0}
-                userVotedUseful={this.props.userVotedUseful}
-                isLoggedIn={this.props.loggedInUser ? true : false}
-                onUsefulClick={this.props.onUsefulClick}
-              />
-            </Box>
+            {this.props.votedUsefulCount !== undefined && (
+              <Box style={{ flexGrow: 1 }}>
+                <UsefulStatsButton
+                  votedUsefulCount={this.props.votedUsefulCount}
+                  hasUserVotedUseful={this.props.hasUserVotedUseful}
+                  isLoggedIn={this.props.loggedInUser ? true : false}
+                  onUsefulClick={this.props.onUsefulClick}
+                />
+              </Box>
+            )}
             {/* Check if pin should be moderated */}
             {this.props.needsModeration && (
               <Flex sx={{ justifyContent: 'space-between' }}>
@@ -144,7 +145,11 @@ export default class HowtoDescription extends PureComponent<IProps> {
               {howto.creatorCountry && (
                 <FlagIconHowTos code={howto.creatorCountry} />
               )}
-              <Text inline auxiliary my={2} ml={1}>
+              <Text
+                my={2}
+                ml={1}
+                sx={{ ...theme.typography.auxiliary, display: 'inline-block' }}
+              >
                 By{' '}
                 <Link
                   sx={{
@@ -164,8 +169,10 @@ export default class HowtoDescription extends PureComponent<IProps> {
               </Text>
             </Flex>
             <Text
-              auxiliary
-              sx={{ color: `${theme.colors.lightgrey} !important` }}
+              sx={{
+                ...theme.typography.auxiliary,
+                color: `${theme.colors.lightgrey} !important`,
+              }}
               mt={1}
               mb={2}
             >
@@ -175,7 +182,9 @@ export default class HowtoDescription extends PureComponent<IProps> {
               {/* HACK 2021-07-16 - new howtos auto capitalize title but not older */}
               {capitalizeFirstLetter(howto.title)}
             </Heading>
-            <Text preLine paragraph>
+            <Text
+              sx={{ ...theme.typography.paragraph, whiteSpace: 'pre-line' }}
+            >
               {howto.description}
             </Text>
           </Box>

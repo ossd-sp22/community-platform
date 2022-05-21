@@ -12,7 +12,7 @@ https://javebratt.com/hide-firebase-api/
 
 import type { IFirebaseConfig, ISentryConfig, siteVariants } from './types'
 import type { ConfigurationOption } from './constants'
-import { UserRole } from '../models'
+import type { UserRole } from '../models'
 
 /**
  * Helper function to load configuration property
@@ -34,7 +34,7 @@ function _c(property: ConfigurationOption, fallbackValue?: string): string {
   return configurationSource?.[property] || fallbackValue
 }
 
-export const getConfigirationOption = _c
+export const getConfigurationOption = _c
 
 /*********************************************************************************************** /
                                         Site Variants
@@ -60,7 +60,10 @@ function getSiteVariant(): siteVariants {
   if (location.host === 'localhost:4000') {
     return 'emulated_site'
   }
-  if (_c('REACT_APP_SITE_VARIANT') === 'test-ci') {
+  if (
+    location.host === 'localhost:3456' ||
+    _c('REACT_APP_SITE_VARIANT') === 'test-ci'
+  ) {
     return 'test-ci'
   }
   if (_c('REACT_APP_SITE_VARIANT') === 'preview') {
@@ -111,10 +114,10 @@ const firebaseConfigs: { [variant in siteVariants]: IFirebaseConfig } = {
     storageBucket: 'onearmy-test-ci.appspot.com',
     messagingSenderId: '174193431763',
   },
-  /** Same default endpoint as test-ci, but most functions will be overwritten by emulators */
+  /** Site backed by sandboxed emulator */
   emulated_site: {
-    apiKey: 'AIzaSyDAxS_7M780mI3_tlwnAvpbaqRsQPlmp64',
-    projectId: 'onearmy-test-ci',
+    apiKey: 'abc',
+    projectId: 'community-platform-emulated',
     storageBucket: 'default-bucket',
   } as any,
   /** Production/live backend with master branch frontend */

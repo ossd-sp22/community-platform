@@ -1,8 +1,9 @@
 import { observer } from 'mobx-react'
 import * as React from 'react'
-import { Redirect, RouteComponentProps } from 'react-router'
+import type { RouteComponentProps } from 'react-router'
+import { Redirect } from 'react-router'
 import Loader from 'src/components/Loader'
-import { Text } from 'src/components/Text'
+import { Text } from 'theme-ui'
 import { useResearchStore } from 'src/stores/Research/research.store'
 import { isAllowToEditContent } from 'src/utils/helpers'
 import UpdateForm from '../Common/Update.form'
@@ -52,7 +53,7 @@ const CreateUpdate = observer((props: IProps) => {
     )
   } else {
     return (
-      <Text txtcenter mt="50px" sx={{ width: '100%' }}>
+      <Text mt="50px" sx={{ width: '100%', textAlign: 'center' }}>
         Research not found
       </Text>
     )

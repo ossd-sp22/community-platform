@@ -1,8 +1,8 @@
 import { Component } from 'react'
 import Foco from 'react-foco'
-import { UserStore } from 'src/stores/User/user.store'
+import type { UserStore } from 'src/stores/User/user.store'
 import { inject, observer } from 'mobx-react'
-import Flex from 'src/components/Flex'
+import { Flex } from 'theme-ui'
 import { Avatar } from 'src/components/Avatar'
 import { ProfileModal } from 'src/components/ProfileModal/ProfileModal'
 import MenuMobileLink from 'src/pages/common/Header/Menu/MenuMobile/MenuMobileLink'
@@ -66,7 +66,11 @@ export default class Profile extends Component<IProps, IState> {
             </MenuMobileLinkContainer>
           ) : (
             <div data-cy="user-menu">
-              <Flex onClick={() => this.toggleProfileModal()} ml={1} sx={{height: '100%'}}>
+              <Flex
+                onClick={() => this.toggleProfileModal()}
+                ml={1}
+                sx={{ height: '100%' }}
+              >
                 <Avatar profileType={user.profileType} />
               </Flex>
               <Flex>

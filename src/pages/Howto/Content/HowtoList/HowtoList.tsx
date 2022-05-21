@@ -10,13 +10,14 @@ import MoreContainer from 'src/components/MoreContainer/MoreContainer'
 import SearchInput from 'src/components/SearchInput'
 import TagsSelect from 'src/components/Tags/TagsSelect'
 import { VirtualizedFlex } from 'src/components/VirtualizedFlex/VirtualizedFlex'
-import { IHowtoDB } from 'src/models/howto.models'
-import { HowtoStore } from 'src/stores/Howto/howto.store'
-import { UserStore } from 'src/stores/User/user.store'
+import type { IHowtoDB } from 'src/models/howto.models'
+import type { HowtoStore } from 'src/stores/Howto/howto.store'
+import type { UserStore } from 'src/stores/User/user.store'
 import HowToCard from './HowToCard'
 import SortSelect from './SortSelect'
-import { ThemeStore } from 'src/stores/Theme/theme.store'
-import { AggregationsStore } from 'src/stores/Aggregations/aggregations.store'
+import type { ThemeStore } from 'src/stores/Theme/theme.store'
+import type { AggregationsStore } from 'src/stores/Aggregations/aggregations.store'
+import { CategoriesSelect } from 'src/components/Category/CategoriesSelect'
 
 interface InjectedProps {
   howtoStore: HowtoStore
@@ -69,6 +70,11 @@ export class HowtoList extends React.Component<any, IState> {
         this.props.howtoStore.updateSelectedTags(tags)
       }
 
+      const categoryQuery = searchParams.get('category')?.toString()
+      if (categoryQuery) {
+        this.props.howtoStore.updateSelectedCategory(categoryQuery)
+      }
+
       const searchQuery = searchParams.get('search')?.toString()
       if (searchQuery) {
         this.injected.howtoStore.updateSearchValue(searchQuery)
@@ -95,20 +101,14 @@ export class HowtoList extends React.Component<any, IState> {
     this.props.howtoStore.updateSearchValue('')
   }
 
-  componentDidMount() {
-    /**
-     * Currently the `userVotedHowtos` property is only
-     * populated by the constructor of UserStore.
-     *
-     * To ensure the value is updated check the store
-     * each time the component is mounted.
-     */
-    this.injected.aggregationsStore.updateAggregation('users_votedUsefulHowtos')
-  }
-
   public render() {
-    const { filteredHowtos, selectedTags, searchValue, referrerSource } =
-      this.props.howtoStore
+    const {
+      filteredHowtos,
+      selectedTags,
+      selectedCategory,
+      searchValue,
+      referrerSource,
+    } = this.props.howtoStore
 
     const theme = this.props?.themeStore?.currentTheme
     const { users_votedUsefulHowtos } =
@@ -119,15 +119,37 @@ export class HowtoList extends React.Component<any, IState> {
         <Flex py={26}>
           {referrerSource ? (
             <Box sx={{ width: '100%' }}>
-              <Heading medium bold txtcenter mt={20}>
+              <Heading
+                sx={{
+                  marginX: 'auto',
+                  textAlign: 'center',
+                  fontWeight: 'bold',
+                  fontSize: 5,
+                }}
+                mt={20}
+              >
                 The page you were looking for was moved or doesn't exist.
               </Heading>
-              <Heading small txtcenter mt={3} mb={10}>
+              <Heading
+                sx={{
+                  textAlign: 'center',
+                  fontSize: 1,
+                }}
+                mt={3}
+                mb={10}
+              >
                 Search all of our how-to's below
               </Heading>
             </Box>
           ) : (
-            <Heading medium bold txtcenter sx={{ marginX: 'auto' }}>
+            <Heading
+              sx={{
+                marginX: 'auto',
+                textAlign: 'center',
+                fontWeight: 'bold',
+                fontSize: 5,
+              }}
+            >
               {theme && theme.howtoHeading}
             </Heading>
           )}
@@ -139,6 +161,29 @@ export class HowtoList extends React.Component<any, IState> {
             flexDirection: ['column', 'column', 'row'],
           }}
         >
+          <AuthWrapper roleRequired="beta-tester">
+            <Flex
+              sx={{ width: ['100%', '100%', '20%'] }}
+              mb={['10px', '10px', 0]}
+              mr={[0, 0, '8px']}
+            >
+              <CategoriesSelect
+                value={selectedCategory ? { label: selectedCategory } : null}
+                onChange={(category) => {
+                  updateQueryParams(
+                    window.location.href,
+                    'category',
+                    category ? category.label : '',
+                  )
+                  this.props.howtoStore.updateSelectedCategory(
+                    category ? category.label : '',
+                  )
+                }}
+                styleVariant="filter"
+                placeholder="Filter by category"
+              />
+            </Flex>
+          </AuthWrapper>
           <Flex
             sx={{ width: ['100%', '100%', '20%'] }}
             mb={['10px', '10px', 0]}
@@ -164,7 +209,7 @@ export class HowtoList extends React.Component<any, IState> {
             mb={['10px', '10px', 0]}
             sx={{ width: ['100%', '100%', '20%'] }}
           >
-            <SortSelect usefulCounts={users_votedUsefulHowtos} />
+            <SortSelect usefulCounts={users_votedUsefulHowtos || {}} />
           </Flex>
           <Flex ml={[0, 0, '8px']} mr={[0, 0, 'auto']} mb={['10px', '10px', 0]}>
             <SearchInput
@@ -195,36 +240,42 @@ export class HowtoList extends React.Component<any, IState> {
           </Flex>
         </Flex>
         <React.Fragment>
-          {filteredHowtos.length === 0 ? (
+          {filteredHowtos.length === 0 && (
             <Flex>
-              <Heading auxiliary txtcenter sx={{ width: '100%' }}>
+              <Heading
+                sx={{
+                  width: '100%',
+                  textAlign: 'center',
+                  ...theme.typography?.auxiliary,
+                }}
+              >
                 {Object.keys(selectedTags).length === 0 &&
-                searchValue.length === 0 ? (
+                searchValue.length === 0 &&
+                selectedCategory.length === 0 ? (
                   <Loader />
                 ) : (
                   'No how-tos to show'
                 )}
               </Heading>
             </Flex>
-          ) : (
-            <Flex
-              sx={{ justifyContent: 'center' }}
-              mx={-4}
-              data-cy="howtolist-flex-container"
-            >
-              <VirtualizedFlex
-                data={filteredHowtos}
-                renderItem={(howto: IHowtoDB) => (
-                  <Box px={4} py={4}>
-                    <HowToCard
-                      howto={howto}
-                      votedUsefulCount={users_votedUsefulHowtos[howto._id]}
-                    />
-                  </Box>
-                )}
-              />
-            </Flex>
           )}
+          <Flex
+            sx={{ justifyContent: 'center' }}
+            mx={-4}
+            data-cy="howtolist-flex-container"
+          >
+            <VirtualizedFlex
+              data={filteredHowtos}
+              renderItem={(howto: IHowtoDB) => (
+                <Box px={4} py={4}>
+                  <HowToCard
+                    howto={howto}
+                    votedUsefulCount={users_votedUsefulHowtos?.[howto._id]}
+                  />
+                </Box>
+              )}
+            />
+          </Flex>
           <Flex sx={{ justifyContent: 'center' }} mt={20}>
             <Link to={'#'} style={{ visibility: 'hidden' }}>
               <Button variant={'secondary'} data-cy="more-how-tos">
@@ -235,9 +286,10 @@ export class HowtoList extends React.Component<any, IState> {
           <MoreContainer m={'0 auto'} pt={60} pb={90}>
             <Flex sx={{ alignItems: 'center', flexDirection: 'column' }} mt={5}>
               <Heading medium sx={{ textAlign: 'center' }}>
-                Inspire the Precious Plastic world.
+                Inspire the {theme.siteName} world.
+                <br />
+                Share your how-to!
               </Heading>
-              <Heading medium>Share your how-to!</Heading>
               <AuthWrapper>
                 <Link to={'/how-to/create'}>
                   <Button variant="primary" mt={30}>

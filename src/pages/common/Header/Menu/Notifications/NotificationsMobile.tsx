@@ -3,10 +3,10 @@ import theme from 'src/themes/styled.theme'
 import styled from '@emotion/styled'
 import { Box } from 'theme-ui'
 import { inject, observer } from 'mobx-react'
-import Flex from 'src/components/Flex'
+import { Flex } from 'theme-ui'
 import { NotificationList } from 'src/components/Notifications/NotificationList'
 import { Button } from 'oa-components'
-import { UserStore } from 'src/stores/User/user.store'
+import type { UserStore } from 'src/stores/User/user.store'
 
 interface IProps {}
 

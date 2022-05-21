@@ -1,12 +1,12 @@
 import * as React from 'react'
 import { Flex, Box } from 'theme-ui'
 import themes from 'src/themes/styled.theme'
+import type { ListRowProps } from 'react-virtualized'
 import {
   List,
   WindowScroller,
   CellMeasurerCache,
   CellMeasurer,
-  ListRowProps,
 } from 'react-virtualized'
 import { emStringToPx } from 'src/utils/helpers'
 
@@ -115,7 +115,8 @@ export class VirtualizedFlex extends React.Component<IProps, IState> {
 
   render() {
     const { dataRows } = this.state
-    return dataRows.length > 0 ? (
+    const { data } = this.props
+    return dataRows.length > 0 && data.length > 0 ? (
       <WindowScroller onResize={() => this.generateRowData(this.props)}>
         {({ onChildScroll, isScrolling, height, width, scrollTop }) => (
           <List

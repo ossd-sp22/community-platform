@@ -1,4 +1,4 @@
-import { IUser } from 'src/models'
+import type { IUser } from 'src/models'
 import { getUserCountry } from './getUserCountry'
 
 const user: IUser = {
@@ -42,5 +42,4 @@ describe('getUserCountry', () => {
 
     expect(getUserCountry(user)).toBe('uk')
   })
-
 })

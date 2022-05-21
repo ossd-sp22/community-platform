@@ -1,14 +1,13 @@
 import * as React from 'react'
-import { HowtoStore } from 'src/stores/Howto/howto.store'
+import type { HowtoStore } from 'src/stores/Howto/howto.store'
 import { inject, observer } from 'mobx-react'
 import Heading from 'src/components/Heading'
 import { Icon } from 'oa-components'
 import { Modal } from 'src/components/Modal/Modal'
 import { Button } from 'oa-components'
 import { Flex } from 'theme-ui'
-import Text from 'src/components/Text'
-import { Box } from 'theme-ui'
-import { RouteComponentProps } from 'react-router'
+import { Box, Text } from 'theme-ui'
+import type { RouteComponentProps } from 'react-router'
 
 interface IProps extends RouteComponentProps<any> {
   onClose: () => void

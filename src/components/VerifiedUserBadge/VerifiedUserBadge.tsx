@@ -1,4 +1,5 @@
-import { Image, ImageProps } from 'theme-ui'
+import type { ImageProps } from 'theme-ui'
+import { Image } from 'theme-ui'
 import { useCommonStores } from 'src/index'
 import VerifiedBadgeIcon from 'src/assets/icons/icon-verified-badge.svg'
 
@@ -10,8 +11,7 @@ interface IProps extends ImageProps {
 export const VerifiedUserBadge = (props: IProps) => {
   const { userId } = props
   const { aggregationsStore } = useCommonStores().stores
-  const { users_verified } = aggregationsStore.aggregations
-  const isVerified = users_verified[userId]
+  const isVerified = aggregationsStore.aggregations.users_verified?.[userId]
   return isVerified ? (
     <Image
       src={VerifiedBadgeIcon}

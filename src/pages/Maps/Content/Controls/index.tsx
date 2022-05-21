@@ -2,7 +2,7 @@ import * as React from 'react'
 import styled from '@emotion/styled'
 
 import { Button } from 'oa-components'
-import { Flex, Box, Image } from 'theme-ui'
+import { Flex, Box, Image, Text } from 'theme-ui'
 import filterIcon from 'src/assets/icons/icon-filters-mobile.png'
 import crossClose from 'src/assets/icons/cross-close.svg'
 import { Modal } from 'src/components/Modal/Modal'
@@ -10,15 +10,18 @@ import { Modal } from 'src/components/Modal/Modal'
 import { GroupingFilterDesktop } from './GroupingFilterDesktop'
 import { GroupingFilterMobile } from './GroupingFilterMobile'
 
-import { IPinGrouping, IMapGrouping, IMapPinType } from 'src/models/maps.models'
+import type {
+  IPinGrouping,
+  IMapGrouping,
+  IMapPinType,
+} from 'src/models/maps.models'
 import { HashLink as Link } from 'react-router-hash-link'
-import { Map } from 'react-leaflet'
+import type { Map } from 'react-leaflet'
 import theme from 'src/themes/styled.theme'
 import { inject } from 'mobx-react'
-import { MapsStore } from 'src/stores/Maps/maps.store'
-import { UserStore } from 'src/stores/User/user.store'
-import { Text } from 'src/components/Text'
-import { RouteComponentProps } from 'react-router'
+import type { MapsStore } from 'src/stores/Maps/maps.store'
+import type { UserStore } from 'src/stores/User/user.store'
+import type { RouteComponentProps } from 'react-router'
 import OsmGeocoding from 'src/components/OsmGeocoding/OsmGeocoding'
 import { logger } from 'src/logger'
 
@@ -164,7 +167,7 @@ class Controls extends React.Component<IProps, IState> {
         {showFiltersMobile && (
           <Modal onDidDismiss={() => this.handleFilterMobileModal()}>
             <Flex p={0} mx={-1} sx={{ justifyContent: 'space-between' }}>
-              <Text bold>Select filters</Text>
+              <Text sx={{ fontWeight: 'bold' }}>Select filters</Text>
               <Image
                 width="25px"
                 src={crossClose}

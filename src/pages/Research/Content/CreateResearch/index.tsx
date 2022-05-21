@@ -1,13 +1,13 @@
 import { inject, observer } from 'mobx-react'
 import * as React from 'react'
-import { RouteComponentProps, Switch, withRouter } from 'react-router'
-import { Flex } from 'theme-ui'
-import { Text } from 'src/components/Text'
-import { IResearch } from 'src/models/research.models'
-import { IUser } from 'src/models/user.models'
+import type { RouteComponentProps } from 'react-router'
+import { Switch, withRouter } from 'react-router'
+import { Flex, Text } from 'theme-ui'
+import type { IResearch } from 'src/models/research.models'
+import type { IUser } from 'src/models/user.models'
 import ResearchForm from 'src/pages/Research/Content/Common/Research.form'
-import { ResearchStore } from 'src/stores/Research/research.store'
-import { UserStore } from 'src/stores/User/user.store'
+import type { ResearchStore } from 'src/stores/Research/research.store'
+import type { UserStore } from 'src/stores/User/user.store'
 import TEMPLATE from './Template'
 
 interface IState {
@@ -51,7 +51,7 @@ class CreateResearch extends React.Component<RouteComponentProps, IState> {
       </Switch>
     ) : (
       <Flex sx={{ justifyContent: 'center' }} mt="40px">
-        <Text regular>Please login to access this page</Text>
+        <Text>Please login to access this page</Text>
       </Flex>
     )
   }

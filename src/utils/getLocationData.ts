@@ -1,5 +1,6 @@
-import { ILatLng, ILocation } from 'src/models'
+import type { ILatLng, ILocation } from 'src/models'
 
+/** Retrieve OSM data for a specific lat-lon */
 export async function getLocationData(latlng: ILatLng): Promise<ILocation> {
   const { lat, lng } = latlng
   const response = await (

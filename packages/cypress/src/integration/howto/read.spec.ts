@@ -1,9 +1,8 @@
 import crypto from 'crypto'
-import { DbCollectionName } from '../../utils/test-utils'
 
 describe('[How To]', () => {
   const SKIP_TIMEOUT = { timeout: 300 }
-  const totalHowTo = 7
+  const totalHowTo = 8
 
   describe('[List how-tos]', () => {
     const howtoUrl = '/how-to/make-glass-like-beams'
@@ -23,7 +22,7 @@ describe('[How To]', () => {
       cy.get('[data-cy=card]').its('length').should('be.eq', totalHowTo)
 
       cy.step('How-to cards has basic info')
-      cy.get(`[data-cy=card] > a[href="${howtoUrl}"]`).within(() => {
+      cy.get(`[data-cy=card] a[href="${howtoUrl}"]`).within(() => {
         cy.contains('Make glass-like beams').should('be.exist')
         cy.contains('By howto_creator').should('be.exist')
         cy.get('img').should('have.attr', 'src').and('match', coverFileRegex)
@@ -31,7 +30,7 @@ describe('[How To]', () => {
       })
 
       cy.step(`Open how-to details when click on a how-to ${howtoUrl}`)
-      cy.get(`[data-cy=card] > a[href="${howtoUrl}"]`, SKIP_TIMEOUT).click()
+      cy.get(`[data-cy=card] a[href="${howtoUrl}"]`, SKIP_TIMEOUT).click()
       cy.url().should('include', howtoUrl)
     })
 
@@ -175,14 +174,14 @@ describe('[How To]', () => {
       })
     })
 
-    describe('[By Authenticated}', () => {
+    describe('[By Authenticated]', () => {
       it('[Edit button is unavailable to non-resource owners]', () => {
         cy.login('howto_reader@test.com', 'test1234')
         cy.visit(specificHowtoUrl)
         cy.get('[data-cy=edit]').should('not.exist')
       })
 
-      it.only('[Comment functionality available]', () => {
+      it('[Comment functionality available]', () => {
         const commentText = 'A short string intended to test commenting'
         cy.login('howto_reader@test.com', 'test1234')
         cy.visit(specificHowtoUrl)
@@ -191,25 +190,11 @@ describe('[How To]', () => {
 
         cy.get(`[data-cy="comments-form"]`).should('be.exist')
 
-        cy.get(`[data-cy="comments-form"]`).should('be.exist')
-
         cy.get('[data-cy="comments-form"]').type(commentText)
 
         cy.get('[data-cy="comment-submit"]').click()
 
-        cy.queryDocuments(
-          DbCollectionName.howtos,
-          'slug',
-          '==',
-          'make-an-interlocking-brick',
-        ).then((howtos) => {
-          cy.wrap(howtos[0].comments).should('have.length.gte', 1)
-          cy.wrap(howtos[0].comments[0]).should('deep.include', {
-            _creatorId: 'howto_reader',
-            creatorName: 'howto_reader',
-            text: commentText,
-          })
-        })
+        cy.get('[data-cy="comment-text"]').should('contain.text', commentText)
       })
     })
 

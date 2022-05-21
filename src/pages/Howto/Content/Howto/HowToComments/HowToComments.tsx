@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import ReactGA from 'react-ga'
+import ReactGA from 'react-ga4'
 import { Box, Flex } from 'theme-ui'
 import { useCommonStores } from 'src/index'
 import { Button } from 'oa-components'
 import { CommentTextArea } from 'src/components/Comment/CommentTextArea'
-import { IComment } from 'src/models'
+import type { IComment } from 'src/models'
 import styled from '@emotion/styled'
 import { logger } from 'src/logger'
 import { CommentList } from 'src/components/CommentList/CommentList'
@@ -33,7 +33,7 @@ export const HowToComments = ({ comments }: IProps) => {
         await stores.userStore.triggerNotification(
           'new_comment',
           howto._createdBy,
-          howto.slug,
+          '/how-to/' + howto.slug,
         )
       }
 
@@ -132,27 +132,28 @@ export const HowToComments = ({ comments }: IProps) => {
           handleEditRequest={handleEditRequest}
           handleDelete={handleDelete}
         />
+
+        <BoxStyled sx={{ width: `${(2 / 3) * 100}%` }}>
+          <CommentTextArea
+            data-cy="comment-text-area"
+            comment={comment}
+            onChange={setComment}
+            loading={loading}
+          />
+          <Button
+            data-cy="comment-submit"
+            disabled={!Boolean(comment.trim()) || loading}
+            variant="primary"
+            onClick={() => onSubmit(comment)}
+            mt={3}
+            sx={{
+              float: 'right',
+            }}
+          >
+            Comment
+          </Button>
+        </BoxStyled>
       </Flex>
-      <BoxStyled sx={{ width: `${(2 / 3) * 100}%` }}>
-        <CommentTextArea
-          data-cy="comment-text-area"
-          comment={comment}
-          onChange={setComment}
-          loading={loading}
-        />
-        <Button
-          data-cy="comment-submit"
-          disabled={!Boolean(comment.trim()) || loading}
-          variant="primary"
-          onClick={() => onSubmit(comment)}
-          mt={3}
-          sx={{
-            float: 'right',
-          }}
-        >
-          Comment
-        </Button>
-      </BoxStyled>
     </Flex>
   )
 }

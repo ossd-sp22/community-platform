@@ -1,20 +1,26 @@
 import { format } from 'date-fns'
 import * as React from 'react'
-import { Box, Flex, Image } from 'theme-ui'
+import { Box, Flex, Image, Text } from 'theme-ui'
 import ArrowIcon from 'src/assets/icons/icon-arrow-select.svg'
 import { Button, FlagIconHowTos } from 'oa-components'
 import Heading from 'src/components/Heading'
 import { Link } from 'src/components/Links'
-import ModerationStatusText from 'src/components/ModerationStatusText'
-import Text from 'src/components/Text'
-import { IResearch } from 'src/models/research.models'
+import ModerationStatusText from 'src/components/ModerationStatusText/ModerationStatustext'
+import type { IResearch } from 'src/models/research.models'
 import theme from 'src/themes/styled.theme'
+import type { IUser } from 'src/models/user.models'
 import { VerifiedUserBadge } from 'src/components/VerifiedUserBadge/VerifiedUserBadge'
+import { UsefulStatsButton } from 'src/components/UsefulStatsButton/UsefulStatsButton'
+
 interface IProps {
   research: IResearch.ItemDB
   isEditable: boolean
+  loggedInUser: IUser | undefined
   needsModeration: boolean
+  votedUsefulCount?: number
+  hasUserVotedUseful: boolean
   moderateResearch: (accepted: boolean) => void
+  onUsefulClick: () => void
 }
 
 const ResearchDescription: React.FC<IProps> = ({
@@ -69,6 +75,16 @@ const ResearchDescription: React.FC<IProps> = ({
               </Flex>
             </Button>
           </Link>
+          {props.votedUsefulCount !== undefined && (
+            <Box style={{ flexGrow: 1 }}>
+              <UsefulStatsButton
+                votedUsefulCount={props.votedUsefulCount}
+                hasUserVotedUseful={props.hasUserVotedUseful}
+                isLoggedIn={props.loggedInUser ? true : false}
+                onUsefulClick={props.onUsefulClick}
+              />
+            </Box>
+          )}
           {/* Check if research should be moderated */}
           {props.needsModeration && (
             <Flex sx={{ justifyContent: 'space-between' }}>
@@ -99,9 +115,16 @@ const ResearchDescription: React.FC<IProps> = ({
         <Box mt={3} mb={2}>
           <Flex sx={{ alignItems: 'center' }}>
             {research.creatorCountry && (
-                <FlagIconHowTos code={research.creatorCountry} />
+              <FlagIconHowTos code={research.creatorCountry} />
             )}
-            <Text inline auxiliary my={2} ml={1}>
+            <Text
+              ml={1}
+              sx={{
+                ...theme.typography.auxiliary,
+                marginTop: 2,
+                marginBottom: 2,
+              }}
+            >
               <Flex sx={{ alignItems: 'center' }}>
                 By
                 <Link
@@ -126,8 +149,10 @@ const ResearchDescription: React.FC<IProps> = ({
             </Text>
           </Flex>
           <Text
-            auxiliary
-            sx={{ color: `${theme.colors.lightgrey} !important` }}
+            sx={{
+              ...theme.typography.auxiliary,
+              color: `${theme.colors.lightgrey} !important`,
+            }}
             mt={1}
             mb={2}
           >
@@ -136,7 +161,7 @@ const ResearchDescription: React.FC<IProps> = ({
           <Heading medium mt={2} mb={1}>
             {research.title}
           </Heading>
-          <Text preLine paragraph>
+          <Text sx={{ whiteSpace: 'pre-line', ...theme.typography.paragraph }}>
             {research.description}
           </Text>
         </Box>
